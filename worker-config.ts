@@ -110,12 +110,48 @@ const config: AdrastiaConfig = {
                     address: "0x4dd2886836eB5966dd2F5a223182E7889CD7F8a6", // Adrastia Pyth Updater contract address
                     tokens: [
                         {
-                            address: "0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6", // Example
+                            address: "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
                             batch: 0,
                             extra: {
-                                desc: "WETH/USD",
+                                desc: "ETH/USD",
                                 heartbeat: 60, // 1 minute
-                                updateThreshold: 20, // 20 bips, 0.2%
+                                updateThreshold: 10, // 10 bips, 0.1%
+                            },
+                        },
+                        {
+                            address: "0xc9d8b075a5c69303365ae23633d4e085199bf5c520a3b90fed1322a0342ffc33",
+                            batch: 0,
+                            extra: {
+                                desc: "WBTC/USD",
+                                heartbeat: 60, // 1 minute
+                                updateThreshold: 10, // 10 bips, 0.1%
+                            },
+                        },
+                        {
+                            address: "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+                            batch: 0,
+                            extra: {
+                                desc: "USDC/USD",
+                                heartbeat: 60, // 1 minute
+                                updateThreshold: 10, // 10 bips, 0.1%
+                            },
+                        },
+                        {
+                            address: "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+                            batch: 0,
+                            extra: {
+                                desc: "USDT/USD",
+                                heartbeat: 60, // 1 minute
+                                updateThreshold: 10, // 10 bips, 0.1%
+                            },
+                        },
+                        {
+                            address: "0x0f6539d2f188eef5cb9dfba796f4c40407e55df14bb668a81a9ba3678d5a625c",
+                            batch: 0,
+                            extra: {
+                                desc: "G/USD",
+                                heartbeat: 60, // 1 minute
+                                updateThreshold: 10, // 10 bips, 0.1%
                             },
                         },
                     ],
