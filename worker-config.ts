@@ -1,0 +1,128 @@
+import { AdrastiaConfig, BatchConfig } from "../../src/config/adrastia-config";
+
+const STD_WRITE_DELAY = 15_000; // Workers incrementally push updates with higher gas prices at 15 second intervals
+
+const workerIndex = parseInt(process.env.ADRASTIA_WORKER_INDEX ?? "1");
+
+const GRAVITY_UPTIME_WEBHOOK_URL = process.env.GRAVITY_UPTIME_WEBHOOK_URL;
+
+const STANDARD_BATCH_CONFIG: BatchConfig = {
+    // Primary polls every second, backup polls every 10 seconds
+    pollingInterval: workerIndex == 1 ? 1_000 : 10_000,
+    writeDelay: workerIndex == 1 ? 0 : STD_WRITE_DELAY * workerIndex,
+    logging: [
+        process.env.DATADOG_API_KEY
+            ? {
+                  type: "datadog",
+                  sourceToken: process.env.DATADOG_API_KEY,
+                  region: process.env.DATADOG_REGION,
+                  level: "notice",
+              }
+            : undefined,
+        process.env.ADRASTIA_LOGTAIL_TOKEN
+            ? {
+                  type: "logtail",
+                  sourceToken: process.env.ADRASTIA_LOGTAIL_TOKEN,
+                  level: "info",
+              }
+            : undefined,
+    ],
+    customerId: "pyth-gravity",
+};
+
+const MULTICALL3_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
+
+// Priority is based on the worker index. Lower value means higher priority.
+const PYTH_HERMES_ENDPOINTS = [
+    {
+        name: "Extrnode",
+        url: process.env.PYTH_HERMES_EXTRNODE_URL,
+        priority: {
+            1: 1,
+            2: 2,
+            3: 1,
+            4: 2,
+        },
+    },
+    {
+        name: "Pyth Official",
+        url: "https://hermes.pyth.network",
+        priority: {
+            1: 2,
+            2: 1,
+            3: 2,
+            4: 1,
+        },
+    },
+];
+
+const sortedHermesEndpoints = PYTH_HERMES_ENDPOINTS.sort((a, b) => {
+    return a.priority[workerIndex] - b.priority[workerIndex];
+}).map((endpoint) => {
+    // Only return name and url
+    return {
+        name: endpoint.name,
+        url: endpoint.url,
+    };
+});
+
+const config: AdrastiaConfig = {
+    httpCacheSeconds: 0,
+    pythHermesEndpoints: sortedHermesEndpoints,
+    chains: {
+        gravity: {
+            txConfig: {
+                gasLimitMultiplier: {
+                    dividend: 2n,
+                    divisor: 1n,
+                },
+                transactionTimeout: STD_WRITE_DELAY * 2,
+                txType: 2,
+                eip1559: {
+                    // Gas prices are based on the 75th percentile
+                    percentile: 75,
+                    historicalBlocks: Math.ceil(5 * 4), // 5 seconds of blocks
+                    // Base fee multiplier of 1.25
+                    baseFeeMultiplierDividend: 125n,
+                    baseFeeMultiplierDivisor: 100n,
+                },
+                // Gas prices are incrementally scaled based on worker index
+                gasPriceMultiplierDividend: 100n + BigInt(workerIndex - 1) * 50n,
+                gasPriceMultiplierDivisor: 100n,
+                // Check for tx confirmations every 250ms
+                confirmationPollingInterval: 250,
+                // Wait up to 10 seconds for tx confirmations
+                transactionConfirmationTimeout: 10_000,
+                // Wait for 5 confirmations
+                waitForConfirmations: 5,
+            },
+            multicall2Address: MULTICALL3_ADDRESS,
+            pythAddress: "0x2880aB155794e7179c9eE2e38200202908C17B43",
+            uptimeWebhookUrl: GRAVITY_UPTIME_WEBHOOK_URL,
+            batches: {
+                0: {
+                    ...STANDARD_BATCH_CONFIG,
+                    batchId: "0-pyth-feeds",
+                },
+            },
+            oracles: [
+                {
+                    address: "0x4dd2886836eB5966dd2F5a223182E7889CD7F8a6", // Adrastia Pyth Updater contract address
+                    tokens: [
+                        {
+                            address: "0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6", // Example
+                            batch: 0,
+                            extra: {
+                                desc: "WETH/USD",
+                                heartbeat: 60, // 1 minute
+                                updateThreshold: 20, // 20 bips, 0.2%
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+};
+
+export default config;
