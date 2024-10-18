@@ -107,7 +107,7 @@ const config: AdrastiaConfig = {
             },
             oracles: [
                 {
-                    address: "0x4dd2886836eB5966dd2F5a223182E7889CD7F8a6", // Adrastia Pyth Updater contract address
+                    address: "0x0054C1f1b6e3c429704EEBe07Abf11AF8b2078bC", // Adrastia Pyth Updater contract address
                     tokens: [
                         {
                             address: "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
