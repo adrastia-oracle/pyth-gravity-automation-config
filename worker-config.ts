@@ -110,10 +110,10 @@ const config: AdrastiaConfig = {
                     address: "0x0054C1f1b6e3c429704EEBe07Abf11AF8b2078bC", // Adrastia Pyth Updater contract address
                     tokens: [
                         {
-                            address: "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+                            address: "0x9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6",
                             batch: 0,
                             extra: {
-                                desc: "ETH/USD",
+                                desc: "WETH/USD",
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
                             },
