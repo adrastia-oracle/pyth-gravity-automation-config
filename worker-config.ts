@@ -91,8 +91,8 @@ const config: AdrastiaConfig = {
                 gasPriceMultiplierDivisor: 100n,
                 // Check for tx confirmations every 250ms
                 confirmationPollingInterval: 250,
-                // Wait up to 10 seconds for tx confirmations
-                transactionConfirmationTimeout: 10_000,
+                // Wait up to 2 seconds for tx confirmations
+                transactionConfirmationTimeout: 2_000,
                 // Wait for 5 confirmations
                 waitForConfirmations: 5,
             },
