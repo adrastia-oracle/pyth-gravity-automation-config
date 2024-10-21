@@ -116,7 +116,7 @@ const config: AdrastiaConfig = {
                                 desc: "WETH/USD",
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
-                                // preemptiveUpdateTime: 5, // 5 seconds
+                                preemptiveUpdateTime: 5, // 5 seconds
                             },
                         },
                         {
@@ -126,7 +126,7 @@ const config: AdrastiaConfig = {
                                 desc: "WBTC/USD",
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
-                                // preemptiveUpdateTime: 5, // 5 seconds
+                                preemptiveUpdateTime: 5, // 5 seconds
                             },
                         },
                         {
@@ -136,7 +136,7 @@ const config: AdrastiaConfig = {
                                 desc: "USDC/USD",
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
-                                // preemptiveUpdateTime: 5, // 5 seconds
+                                preemptiveUpdateTime: 5, // 5 seconds
                             },
                         },
                         {
@@ -146,7 +146,7 @@ const config: AdrastiaConfig = {
                                 desc: "USDT/USD",
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
-                                // preemptiveUpdateTime: 5, // 5 seconds
+                                preemptiveUpdateTime: 5, // 5 seconds
                             },
                         },
                         {
@@ -156,7 +156,7 @@ const config: AdrastiaConfig = {
                                 desc: "G/USD",
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
-                                // preemptiveUpdateTime: 5, // 5 seconds
+                                preemptiveUpdateTime: 5, // 5 seconds
                             },
                         },
                     ],
