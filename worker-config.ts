@@ -30,6 +30,10 @@ const STANDARD_BATCH_CONFIG: BatchConfig = {
     customerId: "pyth-gravity",
 };
 
+// The primary worker uses 1 wei per feed update to calculate the update fee. Others call the Pyth contract to calculate
+// the update fee.
+const UPDATE_FEE = workerIndex == 1 ? 1n : undefined;
+
 const MULTICALL3_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
 
 // Priority is based on the worker index. Lower value means higher priority.
@@ -117,6 +121,7 @@ const config: AdrastiaConfig = {
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
                                 preemptiveUpdateTime: 30, // 30 seconds
+                                updateFee: UPDATE_FEE,
                             },
                         },
                         {
@@ -127,6 +132,7 @@ const config: AdrastiaConfig = {
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
                                 preemptiveUpdateTime: 30, // 30 seconds
+                                updateFee: UPDATE_FEE,
                             },
                         },
                         {
@@ -137,6 +143,7 @@ const config: AdrastiaConfig = {
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
                                 preemptiveUpdateTime: 30, // 30 seconds
+                                updateFee: UPDATE_FEE,
                             },
                         },
                         {
@@ -147,6 +154,7 @@ const config: AdrastiaConfig = {
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
                                 preemptiveUpdateTime: 30, // 30 seconds
+                                updateFee: UPDATE_FEE,
                             },
                         },
                         {
@@ -157,6 +165,7 @@ const config: AdrastiaConfig = {
                                 heartbeat: 60, // 1 minute
                                 updateThreshold: 10, // 10 bips, 0.1%
                                 preemptiveUpdateTime: 30, // 30 seconds
+                                updateFee: UPDATE_FEE,
                             },
                         },
                     ],
