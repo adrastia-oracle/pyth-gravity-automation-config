@@ -99,6 +99,8 @@ const config: AdrastiaConfig = {
                 transactionConfirmationTimeout: 5_000,
                 // Wait for 5 confirmations
                 waitForConfirmations: 5,
+                // Gas limit is hardcoded for the primary worker, others use the RPC to estimate gas
+                gasLimit: workerIndex == 1 ? 30_000_000n : undefined,
             },
             multicall2Address: MULTICALL3_ADDRESS,
             pythAddress: "0x2880aB155794e7179c9eE2e38200202908C17B43",
