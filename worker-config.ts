@@ -1,14 +1,14 @@
 import { AdrastiaConfig, BatchConfig } from "../../src/config/adrastia-config";
 
-const STD_WRITE_DELAY = 15_000; // Workers incrementally push updates with higher gas prices at 15 second intervals
+const STD_WRITE_DELAY = 5_000; // Workers incrementally push updates with higher gas prices at 5 second intervals
 
 const workerIndex = parseInt(process.env.ADRASTIA_WORKER_INDEX ?? "1");
 
 const GRAVITY_UPTIME_WEBHOOK_URL = process.env.GRAVITY_UPTIME_WEBHOOK_URL;
 
 const STANDARD_BATCH_CONFIG: BatchConfig = {
-    // Primary polls every second, secondary every 4 seconds, others every 10 seconds
-    pollingInterval: workerIndex == 1 ? 1_000 : workerIndex == 2 ? 4_000 : 10_000,
+    // Primary polls every second, secondary every 2 seconds, others every 4 seconds
+    pollingInterval: workerIndex == 1 ? 1_000 : workerIndex == 2 ? 2_000 : 4_000,
     writeDelay: STD_WRITE_DELAY * (workerIndex - 1),
     logging: [
         process.env.DATADOG_API_KEY
