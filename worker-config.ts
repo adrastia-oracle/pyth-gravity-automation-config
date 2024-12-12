@@ -113,6 +113,7 @@ const config: AdrastiaConfig = {
             },
             oracles: [
                 {
+                    type: "pyth-feeds",
                     address: "0x86C25Cd48783b1f006BD7BD61692bfCF0755fb1B", // Adrastia Pyth Updater contract address
                     tokens: [
                         {
