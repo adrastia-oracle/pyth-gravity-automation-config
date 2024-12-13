@@ -28,6 +28,7 @@ const STANDARD_BATCH_CONFIG: BatchConfig = {
             : undefined,
     ],
     customerId: "pyth-gravity",
+    type: "pyth-feeds",
 };
 
 // The primary worker uses 1 wei per feed update to calculate the update fee. Others call the Pyth contract to calculate
