@@ -7,7 +7,8 @@ const workerIndex = parseInt(process.env.ADRASTIA_WORKER_INDEX ?? "1");
 const GRAVITY_UPTIME_WEBHOOK_URL = process.env.GRAVITY_UPTIME_WEBHOOK_URL;
 
 const STANDARD_BATCH_CONFIG: BatchConfig = {
-    // Primary polls every second, secondary every 2 seconds, others every 4 seconds
+    // Primary polls every 10ms (with caching)
+    // Secondary every 2 seconds, others every 4 seconds (no caching)
     pollingInterval: workerIndex == 1 ? 1_000 : workerIndex == 2 ? 2_000 : 4_000,
     writeDelay: STD_WRITE_DELAY * (workerIndex - 1),
     logging: [
@@ -73,6 +74,9 @@ const sortedHermesEndpoints = PYTH_HERMES_ENDPOINTS.sort((a, b) => {
 
 const config: AdrastiaConfig = {
     httpCacheSeconds: 0,
+    // With the primary, cache onchain data for 1 second to reduce load on the RPC (also invalidates after updates)
+    // With others, disable caching
+    onchainCacheTtl: workerIndex == 1 ? 1_000 : undefined,
     pythHermesEndpoints: sortedHermesEndpoints,
     chains: {
         gravity: {
