@@ -9,7 +9,7 @@ const GRAVITY_UPTIME_WEBHOOK_URL = process.env.GRAVITY_UPTIME_WEBHOOK_URL;
 const STANDARD_BATCH_CONFIG: BatchConfig = {
     // Primary polls every 10ms (with caching)
     // Secondary every 2 seconds, others every 4 seconds (no caching)
-    pollingInterval: workerIndex == 1 ? 1_000 : workerIndex == 2 ? 2_000 : 4_000,
+    pollingInterval: workerIndex == 1 ? 10 : workerIndex == 2 ? 2_000 : 4_000,
     writeDelay: STD_WRITE_DELAY * (workerIndex - 1),
     logging: [
         process.env.DATADOG_API_KEY
