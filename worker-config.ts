@@ -41,23 +41,45 @@ const MULTICALL3_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
 // Priority is based on the worker index. Lower value means higher priority.
 const PYTH_HERMES_ENDPOINTS = [
     {
-        name: "Extrnode",
-        url: process.env.PYTH_HERMES_EXTRNODE_URL,
+        name: "Triton One",
+        url: process.env.PYTH_HERMES_TRITONONE_WS_URL,
+        onlySubscriptions: true,
         priority: {
             1: 1,
             2: 2,
-            3: 1,
-            4: 2,
+            3: 2,
+            4: 1,
+        },
+    },
+    {
+        name: "Triton One",
+        url: process.env.PYTH_HERMES_TRITONONE_REST_URL,
+        disableSubscriptions: true,
+        priority: {
+            1: 1,
+            2: 2,
+            3: 2,
+            4: 1,
+        },
+    },
+    {
+        name: "Extrnode",
+        url: process.env.PYTH_HERMES_EXTRNODE_URL,
+        priority: {
+            1: 2,
+            2: 1,
+            3: 3,
+            4: 3,
         },
     },
     {
         name: "Pyth Official",
         url: "https://hermes.pyth.network",
         priority: {
-            1: 2,
-            2: 1,
-            3: 2,
-            4: 1,
+            1: 3,
+            2: 3,
+            3: 1,
+            4: 2,
         },
     },
 ];
@@ -69,6 +91,8 @@ const sortedHermesEndpoints = PYTH_HERMES_ENDPOINTS.sort((a, b) => {
     return {
         name: endpoint.name,
         url: endpoint.url,
+        disableSubscriptions: endpoint.disableSubscriptions,
+        onlySubscriptions: endpoint.onlySubscriptions,
     };
 });
 
