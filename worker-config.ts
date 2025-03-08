@@ -12,14 +12,20 @@ const STANDARD_BATCH_CONFIG: BatchConfig = {
     pollingInterval: workerIndex == 1 ? 10 : workerIndex == 2 ? 2_000 : 4_000,
     writeDelay: STD_WRITE_DELAY * (workerIndex - 1),
     logging: [
-        process.env.DATADOG_API_KEY
+        process.env.DD_AGENT_LOGGING_ENABLED === "true"
             ? {
-                  type: "datadog",
-                  sourceToken: process.env.DATADOG_API_KEY,
-                  region: process.env.DATADOG_REGION,
+                  // Default to datadog-agent logging if enabled (faster and more reliable)
+                  type: "datadog-agent",
                   level: "notice",
               }
-            : undefined,
+            : process.env.DATADOG_API_KEY
+              ? {
+                    type: "datadog",
+                    sourceToken: process.env.DATADOG_API_KEY,
+                    region: process.env.DATADOG_REGION,
+                    level: "notice",
+                }
+              : undefined,
         process.env.ADRASTIA_LOGTAIL_TOKEN
             ? {
                   type: "logtail",
