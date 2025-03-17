@@ -1,15 +1,15 @@
 import { AdrastiaConfig, BatchConfig } from "../../src/config/adrastia-config";
 
-const STD_WRITE_DELAY = 5_000; // Workers incrementally push updates with higher gas prices at 5 second intervals
+const STD_WRITE_DELAY = 3_000; // Workers incrementally push updates with higher gas prices at 3 second intervals
 
 const workerIndex = parseInt(process.env.ADRASTIA_WORKER_INDEX ?? "1");
 
 const GRAVITY_UPTIME_WEBHOOK_URL = process.env.GRAVITY_UPTIME_WEBHOOK_URL;
 
 const STANDARD_BATCH_CONFIG: BatchConfig = {
-    // Primary polls every 10ms (with caching)
-    // Secondary every 2 seconds, others every 4 seconds (no caching)
-    pollingInterval: workerIndex == 1 ? 10 : workerIndex == 2 ? 2_000 : 4_000,
+    // Primary and secondary polls every 10ms (with caching)
+    // Tertiary every 2 seconds and others every 4 seconds (no caching)
+    pollingInterval: workerIndex <= 2 ? 10 : workerIndex == 3 ? 2_000 : 4_000,
     writeDelay: STD_WRITE_DELAY * (workerIndex - 1),
     logging: [
         process.env.DD_AGENT_LOGGING_ENABLED === "true"
@@ -38,9 +38,9 @@ const STANDARD_BATCH_CONFIG: BatchConfig = {
     type: "pyth-feeds",
 };
 
-// The primary worker uses 1 wei per feed update to calculate the update fee. Others call the Pyth contract to calculate
-// the update fee.
-const UPDATE_FEE = workerIndex == 1 ? 1n : undefined;
+// The primary and secondary workers uses 1 wei per feed update to calculate the update fee.
+// Others call the Pyth contract to calculate the update fee.
+const UPDATE_FEE = workerIndex <= 2 ? 1n : undefined;
 
 const MULTICALL3_ADDRESS = "0xcA11bde05977b3631167028862bE2a173976CA11";
 
@@ -104,9 +104,9 @@ const sortedHermesEndpoints = PYTH_HERMES_ENDPOINTS.sort((a, b) => {
 
 const config: AdrastiaConfig = {
     httpCacheSeconds: 0,
-    // With the primary, cache onchain data for 1 second to reduce load on the RPC (also invalidates after updates)
+    // With the primary and secondary, cache onchain data for 1 second to reduce load on the RPC (also invalidates after updates)
     // With others, disable caching
-    onchainCacheTtl: workerIndex == 1 ? 1_000 : undefined,
+    onchainCacheTtl: workerIndex <= 2 ? 1_000 : undefined,
     pythHermesEndpoints: sortedHermesEndpoints,
     chains: {
         gravity: {
@@ -134,8 +134,8 @@ const config: AdrastiaConfig = {
                 transactionConfirmationTimeout: 5_000,
                 // Wait for 5 confirmations
                 waitForConfirmations: 5,
-                // Gas limit is hardcoded for the primary worker, others use the RPC to estimate gas
-                gasLimit: workerIndex == 1 ? 30_000_000n : undefined,
+                // Gas limit is hardcoded for the primary and secondary workers, others use the RPC to estimate gas
+                gasLimit: workerIndex <= 2 ? 30_000_000n : undefined,
             },
             multicall2Address: MULTICALL3_ADDRESS,
             pythAddress: "0x2880aB155794e7179c9eE2e38200202908C17B43",
